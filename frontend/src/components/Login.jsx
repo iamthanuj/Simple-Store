@@ -9,7 +9,7 @@ function Login({toggle}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { userLoggedIn } = useContext(AuthContext);
+  const { userLoggedIn, setLoading } = useContext(AuthContext);
 
 
   const navigate = useNavigate();

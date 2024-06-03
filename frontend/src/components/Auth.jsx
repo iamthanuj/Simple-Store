@@ -37,6 +37,7 @@ function Auth() {
   const signIn = async () => {
     if (password === confirmPassword) {
       try {
+        
         const {user} = await createUserWithEmailAndPassword(
           auth,
           email,

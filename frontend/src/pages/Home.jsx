@@ -1,12 +1,18 @@
-import React, { useContext, useEffect } from "react";
-import { auth, googleProvider } from "../config/firebase";
+import React, { useContext, useEffect, useState } from "react";
+import { auth } from "../config/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import NavBar from "../components/NavBar";
+import ProfileModal from "../components/ProfileModal";
 
 function Home() {
   const { currentUser, userLoggedIn } = useContext(AuthContext);
+  const [openModal, setOpenModal] = useState(false);
+
+  const toggleModal = () => {
+    setOpenModal(!openModal);
+  };
 
   const navigate = useNavigate();
 
@@ -27,7 +33,7 @@ function Home() {
 
   return (
     <div>
-      <NavBar/>
+      <NavBar toggleModal={toggleModal} />
       <div>
         <h1 className="text-2xl font-bold text-center mt-[100px]">
           Hello: {currentUser.displayName}
@@ -38,6 +44,7 @@ function Home() {
           </button>
         </div>
       </div>
+      {openModal && <ProfileModal toggleModal={toggleModal} /> }
     </div>
   );
 }
