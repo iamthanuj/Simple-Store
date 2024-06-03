@@ -3,10 +3,11 @@ import { auth, googleProvider } from "../config/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
+import NavBar from "../components/NavBar";
 
 function Home() {
   const { currentUser, userLoggedIn } = useContext(AuthContext);
-  // console.log(useContext(AuthContext))
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,15 +27,16 @@ function Home() {
 
   return (
     <div>
-      {currentUser && (
+      <NavBar/>
+      <div>
         <h1 className="text-2xl font-bold text-center mt-[100px]">
-          Hello: {currentUser.fullName}
+          Hello: {currentUser.displayName}
         </h1>
-      )}
-      <div className="flex justify-center mt-4">
-        <button onClick={handleLogOut} className="btn btn-wide bg-blue-950">
-          Logout
-        </button>
+        <div className="flex justify-center mt-4">
+          <button onClick={handleLogOut} className="btn btn-wide bg-blue-950">
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

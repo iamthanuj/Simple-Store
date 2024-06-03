@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { auth, googleProvider, db } from "../config/firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup , updateProfile } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
@@ -15,6 +15,8 @@ function Auth() {
   const [flipLogin, setFlipLogin] = useState(true);
 
   const { userLoggedIn } = useContext(AuthContext);
+
+  
 
   const navigate = useNavigate();
 
@@ -41,13 +43,17 @@ function Auth() {
           password
         );
 
+        await updateProfile(auth.currentUser, {
+            displayName:fullName,
+            photoURL:""
+        })
         
-        if (user) {
-          await setDoc(doc(db, "users", user.uid), {
-            email: user.email,
-            fullName: fullName,
-          });
-        }
+        // if (user) {
+        //   await setDoc(doc(db, "users", user.uid), {
+        //     email: user.email,
+        //     fullName: fullName,
+        //   });
+        // }
 
         setEmail("");
         setPassword("");

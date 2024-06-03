@@ -18,10 +18,12 @@ export const AuthContextProvider = ({ children }) => {
     async function initializeUser(user){
         if(user){
             console.log(user)
-            const docRef = doc(db,"users", user.uid);
-            const docSnap = await getDoc(docRef);
+            // setLoading(true)
+            // const docRef = doc(db,"users", user.uid);
+            // const docSnap = await getDoc(docRef);
             
-            setCurrentUser({...docSnap.data()})
+            // setCurrentUser({...docSnap.data()})
+            setCurrentUser({...user})
             setUserLoggedIn(true);
         }else{
             setCurrentUser(null);
@@ -39,7 +41,7 @@ export const AuthContextProvider = ({ children }) => {
 
     return(
         <AuthContext.Provider value={value} >
-            {children}
+            {!loading &&children}
         </AuthContext.Provider>
     )
 };
