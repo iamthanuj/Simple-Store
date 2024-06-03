@@ -1,6 +1,7 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
 import { createContext, useContext, useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
 
 export const AuthContext = createContext()
 
@@ -17,7 +18,10 @@ export const AuthContextProvider = ({ children }) => {
     async function initializeUser(user){
         if(user){
             console.log(user)
-            setCurrentUser({...user});
+            const docRef = doc(db,"users", user.uid);
+            const docSnap = await getDoc(docRef);
+            
+            setCurrentUser({...docSnap.data()})
             setUserLoggedIn(true);
         }else{
             setCurrentUser(null);

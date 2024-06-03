@@ -6,6 +6,7 @@ import { AuthContext } from "../contexts/authContext";
 
 function Home() {
   const { currentUser, userLoggedIn } = useContext(AuthContext);
+  // console.log(useContext(AuthContext))
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ function Home() {
     <div>
       {currentUser && (
         <h1 className="text-2xl font-bold text-center mt-[100px]">
-          Hello: {currentUser.displayName}
+          Hello: {currentUser.fullName}
         </h1>
       )}
       <div className="flex justify-center mt-4">
