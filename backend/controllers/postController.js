@@ -3,6 +3,7 @@
 const { db, storage } = require("../db");
 const {
   collection,
+  collectionGroup,
   doc,
   setDoc,
   getDocs,
@@ -71,13 +72,21 @@ const getPosts = async (req, res) => {
   try {
     const { user_id } = req.user;
 
+    // Check if user_id is retrieved successfully
+    console.log("Retrieved user ID:", user_id);
+
     // Query Firestore to get posts for the logged-in user
     const postsRef = collection(db, "posts");
-    const q = query(
-      postsRef,
-      where("uid", "==", user_id),
-      orderBy("createdAt", "desc")
-    );
+
+
+    // const q = query(
+    //   postsRef,
+    //   where("uid", "==", user_id), // Ensure "uid" is the correct field name
+    //   orderBy("createdAt", "desc")
+    // );
+
+    const q = query(postsRef, where("uid", "==", user_id));
+
     const postsSnapshot = await getDocs(q);
 
     if (postsSnapshot.empty) {
@@ -97,6 +106,8 @@ const getPosts = async (req, res) => {
     res.status(400).send(error.message);
   }
 };
+
+
 
 const updatePost = async (req, res) => {
   try {
