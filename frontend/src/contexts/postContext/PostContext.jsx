@@ -15,10 +15,6 @@ export const PostsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
-
-  
-
   // Fetch posts from the backend
   const fetchPosts = async () => {
     const token = auth.currentUser.accessToken;
@@ -59,7 +55,7 @@ export const PostsProvider = ({ children }) => {
         },
       });
 
-      console.log(formData)
+      console.log(formData);
       fetchPosts(); // Refresh the posts list
     } catch (err) {
       setError(err.message);
@@ -67,35 +63,36 @@ export const PostsProvider = ({ children }) => {
     }
   };
 
-    // Update an existing post
-    const updatePost = async (id, postData) => {
-      const token = auth.currentUser.accessToken;
-      setLoading(true);
-      try {
-        const formData = new FormData();
-        for (const key in postData) {
-          formData.append(key, postData[key]);
-        }
-  
-        console.log(`Updating post with ID: ${id}`, formData);
-  
-        await axios.put(`http://localhost:8080/api/posts/${id}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        fetchPosts(); // Refresh the posts list
-      } catch (err) {
-        if (err.response) {
-          console.error("Response error:", err.response.data);
-        } else {
-          console.error("Request error:", err.message);
-        }
-        setError(err.message);
-        setLoading(false);
+  // Update an existing post
+  const updatePost = async (id, postData) => {
+    const token = auth.currentUser.accessToken;
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      for (const key in postData) {
+        formData.append(key, postData[key]);
       }
-    };
+
+      const response = await axios.put(`http://localhost:8080/api/posts/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Update response:", response.data);
+      fetchPosts(); // Refresh the posts list
+    } catch (err) {
+      if (err.response) {
+        console.error("Response error:", err.response.data);
+      } else {
+        console.error("Request error:", err.message);
+      }
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+  
 
   // Delete a post
   const deletePost = async (id) => {

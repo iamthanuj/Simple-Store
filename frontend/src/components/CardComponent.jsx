@@ -16,6 +16,7 @@ function CardComponent({title, desc , image, onEdit}) {
         <p>{desc}</p>
         <div className="card-actions justify-end">
           <button onClick={onEdit} className="btn">Edit</button>
+          <button className="btn">Delete</button>
         </div>
       </div>
     </div>

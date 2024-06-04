@@ -12,6 +12,7 @@ const {
   where,
   query,
   orderBy,
+  getDoc
 } = require("firebase/firestore");
 const {
   ref,
@@ -118,7 +119,7 @@ const updatePost = async (req, res) => {
     }
 
     // Handle image upload if a file is provided
-    let imageURL = "";
+    let imageURL = postDoc.data().imageURL; // Preserve existing image if not updated
     if (file) {
       const timestamp = Date.now();
       const filename = `${timestamp}-${file.originalname}`;
@@ -131,13 +132,14 @@ const updatePost = async (req, res) => {
 
     // Update the post data
     await updateDoc(postRef, {
-      title: title,
-      description: description,
+      title: title || postDoc.data().title, // Use existing title if not updated
+      description: description || postDoc.data().description, // Use existing description if not updated
       imageURL: imageURL,
     });
 
     res.status(200).send("Post updated successfully");
   } catch (error) {
+    console.error("Error updating post:", error);
     res.status(400).send(error.message);
   }
 };

@@ -1,3 +1,5 @@
+// UpdateContentModal.js
+
 import React, { useState, useEffect } from "react";
 import { usePosts } from "../contexts/postContext/PostContext";
 
@@ -20,17 +22,22 @@ function UpdateContentModal({ postId, toggleUpdateModal }) {
     setSelectedFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    if (selectedFile) {
-      formData.append('imageURL', selectedFile);
-    }
     formData.append("title", title);
     formData.append("description", description);
-
-    updatePost(postId, formData);
-    toggleUpdateModal();
+    if (selectedFile) {
+      formData.append("imageURL", selectedFile);
+    }
+  
+    try {
+      await updatePost(postId, formData);
+      toggleUpdateModal();
+    } catch (error) {
+      console.error("Error updating post:", error);
+      // Handle error state
+    }
   };
 
   return (
@@ -121,7 +128,7 @@ function UpdateContentModal({ postId, toggleUpdateModal }) {
                 <input
                   onChange={handleFileChange}
                   type="file"
-                  name="imageURL"
+                  name="image"
                   accept="image/*"
                   className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                 />
