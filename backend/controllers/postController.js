@@ -79,12 +79,6 @@ const getPosts = async (req, res) => {
     const postsRef = collection(db, "posts");
 
 
-    // const q = query(
-    //   postsRef,
-    //   where("uid", "==", user_id), // Ensure "uid" is the correct field name
-    //   orderBy("createdAt", "desc")
-    // );
-
     const q = query(postsRef, where("uid", "==", user_id));
 
     const postsSnapshot = await getDocs(q);

@@ -4,9 +4,12 @@ import { AuthContext } from "../contexts/authContext";
 import userImage from "../assets/user.png";
 import { auth } from "../config/firebase";
 import { signOut } from "firebase/auth";
+import { usePosts } from "../contexts/postContext/PostContext";
 
-function NavBar({toggleModal}) {
+function NavBar({ toggleModal, toggleCreateModal }) {
   const { currentUser, userLoggedIn } = useContext(AuthContext);
+  const {resetPost} = usePosts()
+
   console.log(currentUser);
 
   const navigate = useNavigate();
@@ -14,16 +17,18 @@ function NavBar({toggleModal}) {
   const handleLogOut = async () => {
     try {
       await signOut(auth);
+      resetPost();
       navigate("/");
+
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-blue-950 fixed z-50 px-5">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Simple Store</a>
+        <p className="text-xl text-white">Simple Store</p>
       </div>
       <div className="flex-none gap-2">
         {/* <div className="form-control">
@@ -33,7 +38,8 @@ function NavBar({toggleModal}) {
             className="input input-bordered w-24 md:w-auto"
           />
         </div> */}
-        <h1>{currentUser.displayName}</h1>
+        <button onClick={toggleCreateModal} className="btn">Create Content</button>
+        <h1 className="text-white">{currentUser.displayName}</h1>
         <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
@@ -61,9 +67,7 @@ function NavBar({toggleModal}) {
               <a>Settings</a>
             </li>
             <li>
-              <button onClick={handleLogOut}>
-                Log out
-              </button>
+              <button onClick={handleLogOut}>Log out</button>
             </li>
           </ul>
         </div>

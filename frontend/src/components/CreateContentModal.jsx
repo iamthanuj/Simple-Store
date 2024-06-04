@@ -1,50 +1,28 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../contexts/authContext";
-import proImage from "../assets/user.png";
-import { auth, storage } from "../config/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
+import React, { useState } from "react";
+import fileIcon from "../assets/photo-icon.png";
+import { usePosts } from "../contexts/postContext/PostContext";
 
-function ProfileModal({ toggleModal }) {
-  const { currentUser, userLoggedIn } = useContext(AuthContext);
+function CreateContentModal({ toggleCreateModal }) {
+  const { createPost } = usePosts();
 
-  const [newFullName, setNewFullName] = useState(currentUser.displayName);
-  const [newEmail, setNewEmail] = useState(currentUser.email);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(
-    currentUser.photoURL ? currentUser.photoURL : proImage
-  );
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    console.log(e.target.files);
+    setSelectedFile(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let imageUrl = currentUser.photoURL;
-
-    if (selectedFile) {
-      const storageRef = ref(
-        storage,
-        `profile_images/${currentUser.uid}/${selectedFile.name}`
-      );
-      const snapshot = await uploadBytes(storageRef, selectedFile);
-      imageUrl = await getDownloadURL(snapshot.ref);
-    }
-
-    await updateProfile(auth.currentUser, {
-      displayName: newFullName,
-      photoURL: imageUrl,
-    });
+    const postData = {
+      title,
+      description,
+      image: selectedFile,
+    };
+    await createPost(postData);
+    toggleCreateModal(); // Close the modal after submission
   };
 
   return (
@@ -53,12 +31,12 @@ function ProfileModal({ toggleModal }) {
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Edit Profile
+              New Content
             </h3>
             <button
               type="button"
               className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              onClick={toggleModal}
+              onClick={toggleCreateModal}
             >
               <svg
                 className="w-3 h-3"
@@ -81,8 +59,7 @@ function ProfileModal({ toggleModal }) {
 
           <div className="photo-wrapper p-2">
             <img
-              className="w-32 h-32 rounded-full mx-auto"
-              src={previewImage}
+              className="w-full object-cover h-32 rounded-md mx-auto"
               alt="User Image"
             />
           </div>
@@ -91,38 +68,39 @@ function ProfileModal({ toggleModal }) {
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="title"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Your email
-                </label>
-                <input
-                  type="email"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                  placeholder="name@company.com"
-                  disabled
-                  value={newEmail}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="newFullName"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Full Name
+                  Title
                 </label>
                 <input
                   type="text"
-                  name="newFullName"
-                  id="newFullName"
-                  placeholder=""
-                  value={newFullName}
-                  onChange={(e) => {
-                    setNewFullName(e.target.value);
-                  }}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                  required
+                  placeholder="Content idea"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
                 />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                  id="message"
+                  rows="4"
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Write your thoughts here..."
+                ></textarea>
               </div>
 
               <div>
@@ -130,12 +108,13 @@ function ProfileModal({ toggleModal }) {
                   htmlFor="profileImage"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Profile Image
+                  Image
                 </label>
                 <input
-                  type="file"
-                  accept="image/*"
                   onChange={handleFileChange}
+                  type="file"
+                  name="imageURL"
+                  accept="image/*"
                   className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                 />
               </div>
@@ -143,7 +122,7 @@ function ProfileModal({ toggleModal }) {
                 type="submit"
                 className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
-                Update Profile
+                Create
               </button>
             </form>
           </div>
@@ -153,4 +132,4 @@ function ProfileModal({ toggleModal }) {
   );
 }
 
-export default ProfileModal;
+export default CreateContentModal;
