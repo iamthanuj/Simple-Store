@@ -8,6 +8,8 @@ function UpdateContentModal({ postId, toggleUpdateModal }) {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [image,setImage] = useState(null);
+  const [imagePreview,setImagePreview] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
@@ -15,8 +17,19 @@ function UpdateContentModal({ postId, toggleUpdateModal }) {
     if (post) {
       setTitle(post.title);
       setDescription(post.description);
+      setImage(post.imageURL)
     }
-  }, [postId, posts]);
+
+    if(selectedFile){
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setImagePreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }else {
+      setImagePreview(null); 
+    }
+
+
+  }, [postId, posts,selectedFile]);
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -74,6 +87,7 @@ function UpdateContentModal({ postId, toggleUpdateModal }) {
 
           <div className="photo-wrapper p-2">
             <img
+              src={imagePreview ? imagePreview : image}
               className="w-full object-cover h-32 rounded-md mx-auto"
               alt="User Image"
             />

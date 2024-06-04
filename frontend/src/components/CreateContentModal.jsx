@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import fileIcon from "../assets/photo-icon.png";
+import React, { useEffect, useState } from "react";
+import fileIcon from "../assets/preview.jpg";
 import { usePosts } from "../contexts/postContext/PostContext";
 
 function CreateContentModal({ toggleCreateModal }) {
@@ -7,12 +7,24 @@ function CreateContentModal({ toggleCreateModal }) {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [imagePreview,setImagePreview] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (e) => {
     console.log(e.target.files);
     setSelectedFile(e.target.files[0]);
   };
+
+
+  useEffect(() => {
+    if (selectedFile) {
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setImagePreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    } else {
+      setImagePreview(null); 
+    }
+  }, [selectedFile]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,6 +71,7 @@ function CreateContentModal({ toggleCreateModal }) {
 
           <div className="photo-wrapper p-2">
             <img
+                src={imagePreview ? imagePreview : fileIcon}
               className="w-full object-cover h-32 rounded-md mx-auto"
               alt="User Image"
             />
