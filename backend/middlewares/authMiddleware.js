@@ -13,9 +13,12 @@ const protect = async (req, res, next) => {
       // Get token from header
       token = req.headers.authorization.split(" ")[1];
 
+
+      console.log(token);
       // Verify token
       const decodedToken = await admin.auth().verifyIdToken(token);
 
+      // Store decoded user information in req.user
       req.user = decodedToken;
 
       next();
