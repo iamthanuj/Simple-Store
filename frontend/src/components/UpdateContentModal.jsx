@@ -37,15 +37,16 @@ function UpdateContentModal({ postId, toggleUpdateModal }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    if (selectedFile) {
-      formData.append("imageURL", selectedFile);
+    const updateData = {
+      title,
+      description,
     }
-  
+    if (selectedFile) {
+      updateData.image = selectedFile;
+    }
+
     try {
-      await updatePost(postId, formData);
+      await updatePost(postId, updateData);
       toggleUpdateModal();
     } catch (error) {
       console.error("Error updating post:", error);

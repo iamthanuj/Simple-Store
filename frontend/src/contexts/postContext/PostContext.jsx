@@ -73,12 +73,16 @@ export const PostsProvider = ({ children }) => {
         formData.append(key, postData[key]);
       }
 
-      const response = await axios.put(`http://localhost:8080/api/posts/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        `http://localhost:8080/api/posts/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       console.log("Update response:", response.data);
       fetchPosts(); // Refresh the posts list
@@ -92,17 +96,24 @@ export const PostsProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  
 
   // Delete a post
   const deletePost = async (id) => {
     const token = auth.currentUser.accessToken;
     setLoading(true);
     try {
-      await axios.delete(`/api/posts/${id}`);
+      console.log(`Deleting post with id: ${id}`);
+      console.log(`Token: ${token}`);
+      await axios.delete(`http://localhost:8080/api/posts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchPosts(); // Refresh the posts list
     } catch (err) {
-      setError(err.message);
+      console.error('Error deleting post:', err);
+      setError(err.response ? err.response.data.message : err.message);
+    } finally {
       setLoading(false);
     }
   };

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import googleImage from "../assets/google.png";
 import { auth, googleProvider, db } from "../config/firebase";
 import { createUserWithEmailAndPassword, signInWithPopup , updateProfile } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
@@ -49,12 +50,6 @@ function Auth() {
             photoURL:""
         })
         
-        // if (user) {
-        //   await setDoc(doc(db, "users", user.uid), {
-        //     email: user.email,
-        //     fullName: fullName,
-        //   });
-        // }
 
         setEmail("");
         setPassword("");
@@ -90,6 +85,7 @@ function Auth() {
   return (
     <div className="bg-blue-950 h-screen flex justify-center items-center">
       <div className="p-5 bg-white rounded-xl flex flex-col gap-2">
+        <h1 className="text-center text-3xl font-bold mb-4">Simple Store</h1>
         {flipLogin ? (
           <Login toggle={toggleFlip} />
         ) : (
@@ -187,7 +183,7 @@ function Auth() {
               />
             </label>
 
-            <button onClick={signIn} className="btn btn-wide bg-blue-950">
+            <button onClick={signIn} className="btn btn-wide bg-blue-950 text-white">
               Register
             </button>
             <p className="text-blue-950">
@@ -199,8 +195,8 @@ function Auth() {
           </div>
         )}
 
-        <button onClick={googleSignIn} className="btn btn-wide bg-blue-950">
-          Sign With Google
+        <button onClick={googleSignIn} className="btn btn-wide bg-blue-950 text-white">
+          <span><img className="w-5 " src={googleImage} alt="" /></span>Sign With Google
         </button>
       </div>
 

@@ -6,7 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 
 function ProfileModal({ toggleModal }) {
-  const { currentUser, userLoggedIn } = useContext(AuthContext);
+  const currentUser = auth.currentUser
 
   const [newFullName, setNewFullName] = useState(currentUser.displayName);
   const [newEmail, setNewEmail] = useState(currentUser.email);
@@ -45,6 +45,7 @@ function ProfileModal({ toggleModal }) {
       displayName: newFullName,
       photoURL: imageUrl,
     });
+    toggleModal();
   };
 
   return (

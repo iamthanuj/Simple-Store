@@ -7,14 +7,16 @@ import CardComponent from "../components/CardComponent";
 import { usePosts } from "../contexts/postContext/PostContext";
 import CreateContentModal from "../components/CreateContentModal";
 import UpdateContentModal from "../components/UpdateContentModal";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
 
 function Home() {
   const { currentUser, userLoggedIn } = useContext(AuthContext);
   const { posts, loading, error, deletePost, fetchPosts } = usePosts();
   const [openModal, setOpenModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = useState(false); // State to manage UpdateContentModal visibility
-  const [currentPostId, setCurrentPostId] = useState(null); // State to store the current post ID for updating
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [currentPostId, setCurrentPostId] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const toggleModal = () => {
     setOpenModal(!openModal);
@@ -27,6 +29,11 @@ function Home() {
   const toggleUpdateModal = (postId) => {
     setCurrentPostId(postId);
     setOpenUpdateModal(!openUpdateModal);
+  };
+
+  const toggleDeleteModal = (postId) => {
+    setCurrentPostId(postId);
+    setOpenDeleteModal(!openDeleteModal);
   };
 
   const navigate = useNavigate();
@@ -58,6 +65,7 @@ function Home() {
                 desc={post.description}
                 image={post.imageURL}
                 onEdit={() => toggleUpdateModal(post.id)}
+                onDelete={()=> toggleDeleteModal(post.id)}
               />
             ))}
       </div>
@@ -68,7 +76,13 @@ function Home() {
       {openUpdateModal && (
         <UpdateContentModal
           toggleUpdateModal={toggleUpdateModal}
-          postId={currentPostId} // Pass the current post ID to the UpdateContentModal
+          postId={currentPostId}
+        />
+      )}
+      {openDeleteModal && (
+        <DeleteConfirmModal
+          toggleDeleteModal={toggleDeleteModal}
+          postId={currentPostId}
         />
       )}
     </div>

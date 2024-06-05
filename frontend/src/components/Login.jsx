@@ -79,7 +79,7 @@ function Login({toggle}) {
         />
       </label>
 
-      <button onClick={handleLogin} className="btn btn-wide bg-blue-950">
+      <button onClick={handleLogin} className="btn btn-wide bg-blue-950 text-white">
         Sign in
       </button>
       <p className="text-blue-950">No account? <button className="text-black font-bold" onClick={toggle}>Create a account</button></p>
