@@ -8,6 +8,7 @@ import { usePosts } from "../contexts/postContext/PostContext";
 import CreateContentModal from "../components/CreateContentModal";
 import UpdateContentModal from "../components/UpdateContentModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import BeatLoader from "react-spinners/BeatLoader";
 
 function Home() {
   const { currentUser, userLoggedIn } = useContext(AuthContext);
@@ -46,8 +47,8 @@ function Home() {
     fetchPosts();
   }, [userLoggedIn, navigate]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="h-screen flex justify-center items-center"><BeatLoader  size={20}  /></div>;
+  if (error) return <div >Erro: {error}</div>;
 
   return (
     <div className="box-border ">

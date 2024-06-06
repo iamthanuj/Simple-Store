@@ -3,6 +3,7 @@ import { auth, googleProvider } from "../config/firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext"
+import { toast } from "react-toastify";
 
 
 function Login({toggle}) {
@@ -24,6 +25,7 @@ function Login({toggle}) {
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
+      toast.error("Enter Correct Credentials")
       console.log(error);
     }
   };
