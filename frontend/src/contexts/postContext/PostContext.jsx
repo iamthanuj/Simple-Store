@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../../config/firebase";
-import { AuthContext } from "../authContext";
 import axios from "axios";
 
 const REST_API_URI = import.meta.env.VITE_REST_API_URI
