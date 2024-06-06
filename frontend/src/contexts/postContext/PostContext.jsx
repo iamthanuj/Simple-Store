@@ -3,6 +3,8 @@ import { auth } from "../../config/firebase";
 import { AuthContext } from "../authContext";
 import axios from "axios";
 
+const REST_API_URI = import.meta.env.VITE_REST_API_URI
+
 // Create a context for posts
 const PostsContext = createContext();
 
@@ -20,7 +22,7 @@ export const PostsProvider = ({ children }) => {
     const token = auth.currentUser.accessToken;
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:8080/api/posts", {
+      const response = await axios.get(`${REST_API_URI}/api/posts`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +50,7 @@ export const PostsProvider = ({ children }) => {
         formData.append(key, postData[key]);
       }
 
-      await axios.post("http://localhost:8080/api/posts", formData, {
+      await axios.post(`${REST_API_URI}/api/posts`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
@@ -74,7 +76,7 @@ export const PostsProvider = ({ children }) => {
       }
 
       const response = await axios.put(
-        `http://localhost:8080/api/posts/${id}`,
+        `${REST_API_URI}/api/posts/${id}`,
         formData,
         {
           headers: {
@@ -104,7 +106,7 @@ export const PostsProvider = ({ children }) => {
     try {
       console.log(`Deleting post with id: ${id}`);
       console.log(`Token: ${token}`);
-      await axios.delete(`http://localhost:8080/api/posts/${id}`, {
+      await axios.delete(`${REST_API_URI}/api/posts/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
