@@ -56,7 +56,7 @@ function Home() {
         toggleModal={toggleModal}
         toggleCreateModal={toggleCreateeModal}
       />
-      <div className="container mx-auto pt-[100px] px-5 grid grid-cols-2 gap-8 ">
+      <div className="container mx-auto pt-[100px] px-5 grid grid-cols-1 sm:grid-cols-2 gap-8 ">
         {posts.length == 0
           ? "No Contents"
           : posts.map((post) => (

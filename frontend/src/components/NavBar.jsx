@@ -25,8 +25,8 @@ function NavBar({ toggleModal, toggleCreateModal }) {
 
 
   return (
-    <div className="navbar bg-blue-950 fixed z-50 px-5">
-      <div className="flex-1">
+    <div className="navbar bg-blue-950 fixed z-50 px-5 flex justify-between">
+      <div className="flex-1 hidden">
         <p className="text-xl text-white">Simple Store</p>
       </div>
       <div className="flex-none gap-2">
